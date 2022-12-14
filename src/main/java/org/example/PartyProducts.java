@@ -1,10 +1,13 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class PartyProducts{
+public class PartyProducts extends Product{
     List<Product> partyProduct = new ArrayList<>();
     String comingDate;
     String nameManager;
@@ -24,8 +27,16 @@ public class PartyProducts{
         return comingDate;
     }
 
+    public List<Product> getPartyProduct() {
+        return partyProduct;
+    }
+
     public void setComingDate(String comingDate) {
         this.comingDate = comingDate;
+    }
+
+    public void setPartyProduct(List<Product> partyProduct) {
+        this.partyProduct = partyProduct;
     }
 
     public String getNameManager() {
@@ -50,40 +61,79 @@ public class PartyProducts{
                 getComingDate()+" на складе № "+getNumberWarehouse();
     }
 
-    public List<Product> addProducts() {
+    public List<Product> addProducts() throws IOException {
         List<Product> entranceProducts = new ArrayList<>();
-        Scanner scan = new Scanner(System.in);
-        Scanner scan1 = new Scanner(System.in);
-        int scanner = 1;
+
+        BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
         int scanId = 0;
+        System.out.print("Введите категорию товара,поступившего на склад: \n" +
+                "1. Товары общего потребления \n" +
+                "2. Товары,содержащие алкоголь \n" +
+                "3. Лекарственные средства \n" +
+                "Ваш товар относится к категории №:\n ");
+        int sc = Integer.parseInt(scanner.readLine());
         double scanPrice = 0;
         String scanName = null;
-        while (true) {
-            System.out.print("Если хотите добавить новый товар нажмите 1 если нет нажмите 0 ");
-            if (scan.hasNext()) {
-                scanner = scan.nextInt();
-            } else {
-                System.out.println("вы ввели значение, отличное от 0 или 1, перезапустите программу");
+        while (sc!=0) {
+
+            switch (sc){
+                case 1:
+                    Product addProduct = new Product();
+                    addProduct.addConsoleProduct();
+                    entranceProducts.add(addProduct);
+                    break;
+
+                case 2:
+                    AlcogolDrink addAlcoProduct = new AlcogolDrink();
+                    addAlcoProduct.addConsoleAlcProduct();
+                    entranceProducts.add(addAlcoProduct);
+                    break;
+
+                case 3:
+                    MedicineProduct addMedicineProduct = new MedicineProduct();
+                    addMedicineProduct.addConsoleMedProduct();
+                    entranceProducts.add(addMedicineProduct);
+                    break;
+
+                case 0:
+                    System.out.println("Приём товара завершён");
+                    break;
+
+                default:
+                    System.out.println("произошла ошибка выбора категории");
+                    break;
+
+
             }
-            if (scanner == 0) break;
-            System.out.print("введите наименованаие поступившего товара ");
-            if (scan1.hasNextLine()) {
-                scanName = scan1.nextLine();
-            } else System.out.println("Некорректные данные для наименования товара");
+            System.out.print("Введите категорию товара,поступившего на склад: \n" +
+                    "1. Товары общего потребления \n" +
+                    "2. Товары,содержащие алкоголь \n" +
+                    "3. Лекарственные средства \n" +
+                    "0. Завершить приём товара \n"+
+                    "Ваш товар относится к категории №:\n ");
+            sc = Integer.parseInt(scanner.readLine());
 
-            System.out.print("введите Id поступившего товара ");
-            if (scan.hasNext()) {
-                scanId = scan.nextInt();
-            } else System.out.println("Некорректные данные для id товара");
-            System.out.print("введите цену поступившего товара ");
-            if (scan.hasNextDouble()) {
-                scanPrice = scan.nextDouble();
-            } else System.out.println("Некорректные данные для цены товара ");
-            entranceProducts.add(new Product(scanPrice, scanName, scanId));
         }
-        System.out.println("Вы завершили вносить данные по поступившему товару!");
-
-
         return entranceProducts;
+    }
+    PartyProducts createPartyProd() throws IOException {
+        PartyProducts partyProducts = new PartyProducts();
+        setPartyProduct(partyProducts.addProducts());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+            System.out.println("введите имя менеджера, принимающего товар: ");
+            String nameManager = br.readLine();
+            setNameManager(nameManager);
+
+            System.out.println("Введите дату поступления товара");
+            String date = br.readLine();
+            setComingDate(date);
+
+
+            System.out.println("Ввведите номер склада, на который отгружен товар");
+            int sklad = Integer.parseInt(br.readLine());
+            setNumberWarehouse(sklad);
+
+        return partyProducts;
     }
 }

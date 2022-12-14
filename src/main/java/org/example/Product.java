@@ -1,6 +1,6 @@
 package org.example;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -24,11 +24,8 @@ public class Product {
         return price;
     }
 
-    private void setPrice(double price) {
-        if (price <= 0) {
-            System.out.println("Для продукта " + this.name + " вы ввели недопустимое значение цены");
-            this.price = 0;
-        }
+    public void setPrice(double price) {
+
         this.price = price;
     }
 
@@ -36,7 +33,7 @@ public class Product {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -44,25 +41,24 @@ public class Product {
         return idProduct;
     }
 
-    private void setIdProduct(int idProduct) {
+    public void setIdProduct(int idProduct) {
         this.idProduct = idProduct;
     }
 
     @Override
     public String toString() {
-        return String.format("в магазине числится под номером: %d товар: %s со стоимостью: %f"
-                , getIdProduct(), getName(), getPrice());
+
+        return "Товар "+ getName()+ " c id  "+getIdProduct()+ " стоит "+getPrice();
     }
 
-
-
-public  List<Product> findName(String name, List<Product> products) {
+    public  List<Product> findName(String name, List<PartyProducts> products) {
     List<Product> nameSearchList = new ArrayList<>();
     for (Product element:products) {
         if(element.getName().equals(name)) nameSearchList.add(element);
     }
     return nameSearchList;
 }
+
 
     public  List<Product> findPrice(double priceMin, double priceMax, List<Product> products) {
         List<Product> nameSearchList = new ArrayList<>();
@@ -72,7 +68,24 @@ public  List<Product> findName(String name, List<Product> products) {
         return nameSearchList;
     }
 
+    public void addConsoleProduct() throws IOException {
+        Product addProd = new Product();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+            System.out.print("Введите id продукта: ");
+            int idProduct = Integer.parseInt(br.readLine());
+            setIdProduct(idProduct);
+
+            System.out.print("Введите цену продукта: ");
+            double price = Double.parseDouble(br.readLine());
+            setPrice(price);
+
+            System.out.print("Введите наименование продукта: ");
+            String name = br.readLine();
+            setName(name);
+
+
+            }
     }
 
 
